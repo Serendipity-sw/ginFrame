@@ -6,6 +6,7 @@
 package main
 
 import (
+	"./common"
 	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -14,7 +15,6 @@ import (
 	"github.com/smtc/glog"
 	"os"
 	"runtime"
-	"sceneNavigation/common"
 	"strings"
 )
 
