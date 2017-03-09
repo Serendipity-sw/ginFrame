@@ -1,6 +1,6 @@
 {
-  "logDir":"./logs",
-"rootPrefix":"",
-  "loadTemplates":"./template",
-  "serverPidFilePath":"./sceneNavigation.pid"
+  "logDir": "./logs",
+  "rootPrefix": "",
+  "loadTemplates": "./template",
+  "serverPidFilePath": "./sceneNavigation.pid"
 }
