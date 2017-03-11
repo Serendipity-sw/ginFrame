@@ -14,15 +14,14 @@ import (
 	"github.com/guotie/deferinit"
 	"github.com/smtc/glog"
 	"os"
+	"os/signal"
 	"runtime"
 	"strings"
-)
-
-const (
-	MAIN_ANALYSIS = "/mainjs/analysis" //程序主入口
+	"syscall"
 )
 
 var (
+	pidStrPath          = "./sceneMarketingService.pid"
 	configFn            = flag.String("config", "./config.json", "config file path")
 	debugFlag           = flag.Bool("d", false, "debug mode")
 	serverListeningPort int         //服务监听端口
@@ -143,6 +142,18 @@ func serverExit() {
 创建时间:2017年2月9日14:08:21
 */
 func main() {
+	if common.CheckPid(pidStrPath) {
+		return
+	}
 	flag.Parse()
 	serverRun(*configFn, *debugFlag)
+	c := make(chan os.Signal, 1)
+	common.WritePid(pidStrPath)
+	signal.Notify(c, os.Interrupt, os.Kill, syscall.SIGTERM)
+	//信号等待
+	<-c
+	serverExit()
+	common.RmPidFile(pidStrPath)
+	glog.Close()
+	os.Exit(0)
 }
