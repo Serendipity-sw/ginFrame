@@ -33,16 +33,16 @@ type MySqlDBStruct struct {
 输入参数：数据库对象
 输出对象：数据库连接对象
 */
-func MySqlSlConntion(model MySqlDBStruct) *sql.DB {
-	dbclause := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=true&allowAllFiles=true", model.DbUser, model.DbPass, model.DbHost, model.DbPort, model.DbName)
-	dbs, err := sql.Open("mysql", dbclause)
+func MySqlSQlConntion(model MySqlDBStruct) *sql.DB {
+	dbClause := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=true&allowAllFiles=true", model.DbUser, model.DbPass, model.DbHost, model.DbPort, model.DbName)
+	dbs, err := sql.Open("mysql", dbClause)
 	if err != nil {
-		glog.Error("mysql can't connection dbclause: %s err: %s \n", dbclause, err.Error())
+		glog.Error("mysql can't connection dbClause: %s err: %s \n", dbClause, err.Error())
 		return nil
 	}
 	err = dbs.Ping()
 	if err != nil {
-		glog.Error("mysql can't ping dbclause: %s err: %s \n", dbclause, err.Error())
+		glog.Error("mysql can't ping dbClause: %s err: %s \n", dbClause, err.Error())
 		return nil
 	}
 	return dbs
@@ -76,7 +76,7 @@ func MySqlSelect(dbs *sql.DB, model MySqlDBStruct, sqlStr string, param ...inter
 	if err != nil {
 		glog.Error("mysql can't ping %s \n", err.Error())
 		MySqlClose(dbs)
-		dbs = MySqlSlConntion(model)
+		dbs = MySqlSQlConntion(model)
 	}
 	if param == nil {
 		row, err = dbs.Query(sqlStr)
@@ -109,7 +109,7 @@ func MySqlSqlExec(dbs *sql.DB, model MySqlDBStruct, sqlStr string, param ...inte
 	if err != nil {
 		glog.Error("mysql can't ping %s \n", err.Error())
 		MySqlClose(dbs)
-		dbs = MySqlSlConntion(model)
+		dbs = MySqlSQlConntion(model)
 	}
 
 	if param == nil {
