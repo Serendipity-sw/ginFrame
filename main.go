@@ -99,6 +99,8 @@ func serverExit() {
 
 	deferinit.FiniAll()
 	fmt.Println("stop all modules successfully!")
+
+	glog.Close()
 }
 
 /**
@@ -117,8 +119,7 @@ func main() {
 	signal.Notify(c, os.Interrupt, os.Kill, syscall.SIGTERM)
 	//信号等待
 	<-c
-	serverExit()
 	common.RmPidFile(pidStrPath)
-	glog.Close()
+	serverExit()
 	os.Exit(0)
 }
