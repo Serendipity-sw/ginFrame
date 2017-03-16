@@ -6,7 +6,7 @@
 package main
 
 import (
-	"./common"
+	"ginFrame/common"
 	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"

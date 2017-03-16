@@ -6,7 +6,6 @@
 package main
 
 import (
-	"./common"
 	"github.com/smtc/glog"
 )
 
@@ -23,5 +22,9 @@ func logInit(debug bool) {
 	if len(logsDir) != 0 {
 		option["dir"] = logsDir
 	}
-	glog.InitLogger(common.If(debug, glog.DEV, glog.PRO).(int), option)
+	if debug {
+		glog.InitLogger(glog.DEV,option)
+	}else{
+		glog.InitLogger(glog.PRO,option)
+	}
 }

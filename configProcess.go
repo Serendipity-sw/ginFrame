@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./common"
+	"ginFrame/common"
 	"fmt"
 	"github.com/guotie/config"
 	"os"
