@@ -74,3 +74,10 @@
     3. RmPidFile
         删除PID文件
         输入参数：pid文件路径
+        
+## ginFrame
+        
+#### router.go
+
+    路由数据处理
+        
