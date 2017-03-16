@@ -60,15 +60,7 @@ func PathExists(path string) (bool, error) {
 输出参数:错误对象
 */
 func FileCreateAndWrite(content *[]byte, fileName string, isAppend bool) error {
-	var (
-		f   *os.File
-		err error
-	)
-	if isAppend {
-		f, err = AppendFileOpen(fileName)
-	} else {
-		f, err = FileOpen(fileName)
-	}
+	f, err := FileOpen(fileName, isAppend)
 	if err != nil {
 		return err
 	}
@@ -124,22 +116,18 @@ func ReadFileByLine(filePath string) (*[]string, error) {
 文件打开
 创建人:邵炜
 创建时间:2017年3月14日14:54:08
-输入参数:文件路径
+输入参数:文件路径 是否追加
 输出参数:文件对象 错误对象
 */
-func AppendFileOpen(fileName string) (*os.File, error) {
-	f, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	return f, err
-}
-
-/**
-文件打开
-创建人:邵炜
-创建时间:2017年3月14日14:54:08
-输入参数:文件路径
-输出参数:文件对象 错误对象
-*/
-func FileOpen(fileName string) (*os.File, error) {
-	f, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY, 0644)
+func FileOpen(fileName string, isAppend bool) (*os.File, error) {
+	var (
+		f   *os.File
+		err error
+	)
+	if isAppend {
+		f, err = os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	} else {
+		f, err = os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY, 0644)
+	}
 	return f, err
 }
