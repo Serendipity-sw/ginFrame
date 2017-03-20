@@ -6,13 +6,13 @@
 package main
 
 import (
-	"ginFrame/common"
 	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/guotie/config"
 	"github.com/guotie/deferinit"
 	"github.com/smtc/glog"
+	"github.com/swgloomy/go-common"
 	"os"
 	"os/signal"
 	"runtime"

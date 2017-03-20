@@ -1,9 +1,9 @@
 package main
 
 import (
-	"ginFrame/common"
 	"fmt"
 	"github.com/guotie/config"
+	"github.com/swgloomy/go-common"
 	"os"
 	"strings"
 )
