@@ -23,8 +23,8 @@ func logInit(debug bool) {
 		option["dir"] = logsDir
 	}
 	if debug {
-		glog.InitLogger(glog.DEV,option)
-	}else{
-		glog.InitLogger(glog.PRO,option)
+		glog.InitLogger(glog.DEV, option)
+	} else {
+		glog.InitLogger(glog.PRO, option)
 	}
 }

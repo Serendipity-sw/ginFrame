@@ -1,8 +1,3 @@
-/**
-场景导航服务程序入口
-创建人:邵炜
-创建时间:2017年2月8日17:56:01
-*/
 package main
 
 import (
@@ -12,23 +7,14 @@ import (
 	"github.com/guotie/config"
 	"github.com/guotie/deferinit"
 	"github.com/smtc/glog"
-	"github.com/swgloomy/go-common"
+	"github.com/swgloomy/gutil"
+	"io/ioutil"
+	"net/http"
 	"os"
 	"os/signal"
 	"runtime"
+	"strings"
 	"syscall"
-)
-
-var (
-	pidStrPath          = "./sceneMarketingService.pid"
-	configFn            = flag.String("config", "./config.json", "config file path")
-	debugFlag           = flag.Bool("d", false, "debug mode")
-	serverListeningPort int         //服务监听端口
-	logsDir             string      //程序记录日志存放目录
-	rootPrefix          string      //服务运行所需要的二级目录名称
-	loadTemplates       string      //需要加载运行的html模板路径
-	rt                  *gin.Engine //web初始化后变量
-	serverPidFilePath   string      //程序运行PID文件目录
 )
 
 /**
@@ -39,10 +25,18 @@ var (
 */
 func ginInit(debug bool) {
 	//设置gin的工作方式
-	gin.SetMode(common.If(debug, gin.DebugMode, gin.ReleaseMode).(string))
+	gin.SetMode(gutil.If(debug, gin.DebugMode, gin.ReleaseMode).(string))
 	rt = gin.Default()
-	if len(loadTemplates) != 0 {
-		rt.LoadHTMLGlob(fmt.Sprintf("%s/*", loadTemplates))
+	files, err := ioutil.ReadDir(loadTemplates)
+	if err != nil {
+		glog.Error(fmt.Sprintf("ginInit load template is err! loadTemplates: %s err: %s \n", loadTemplates, err.Error()))
+	} else {
+		for _, file := range files {
+			if !file.IsDir() {
+				rt.LoadHTMLGlob(fmt.Sprintf("%s/*", loadTemplates))
+				break
+			}
+		}
 	}
 	setGinRouter(rt)
 	go rt.Run(fmt.Sprintf(":%d", serverListeningPort))
@@ -93,17 +87,31 @@ func serverExit() {
 创建时间:2017年2月9日14:08:21
 */
 func main() {
-	if common.CheckPid(pidStrPath) {
+	if gutil.CheckPid(pidStrPath) {
 		return
 	}
 	flag.Parse()
 	serverRun(*configFn, *debugFlag)
 	c := make(chan os.Signal, 1)
-	common.WritePid(pidStrPath)
+	gutil.WritePid(pidStrPath)
 	signal.Notify(c, os.Interrupt, os.Kill, syscall.SIGTERM)
 	//信号等待
 	<-c
-	common.RmPidFile(pidStrPath)
+	gutil.RmPidFile(pidStrPath)
 	serverExit()
 	os.Exit(0)
+}
+
+// 报告用户请求相关信息
+func userReqInfo(req *http.Request) (info string) {
+	requestIp := req.Header.Get("X-Real-IP")
+	if strings.TrimSpace(requestIp) == "" {
+		requestIp = req.Header.Get("X-Forwarded-For")
+		if strings.TrimSpace(requestIp) == "" {
+			requestIp = req.RemoteAddr
+		}
+	}
+	info += fmt.Sprintf("ipaddr: %s user-agent: %s referer: %s",
+		requestIp, req.UserAgent(), req.Referer())
+	return info
 }

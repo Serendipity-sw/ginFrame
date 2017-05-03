@@ -1,6 +1,7 @@
 {
-  "logDir": "./logs",
-  "rootPrefix": "",
-  "loadTemplates": "./template",
-  "serverPidFilePath": "./sceneNavigation.pid"
+  "serverListeningPort":8000,
+  "logsDir":"./logs",
+  "rootPrefix":"",
+  "loadTemplates":"./templates",
+  "fileProgram":"./fileProgram"
 }
